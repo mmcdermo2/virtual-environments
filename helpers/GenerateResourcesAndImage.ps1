@@ -104,6 +104,9 @@ Function GenerateResourcesAndImage {
 
         .EXAMPLE
             GenerateResourcesAndImage -SubscriptionId {YourSubscriptionId} -ResourceGroupName "shsamytest1" -ImageGenerationRepositoryRoot "C:\virtual-environments" -ImageType Ubuntu1804 -AzureLocation "East US"
+
+        .EXAMPLE
+            GenerateResourcesAndImage -SubscriptionId {YourSubscriptionId} -ResourceGroupName "MyStorage-RG" -StorageAccountName "MyStorageAccount" -ImageType Windows2019
     #>
     param (
         [Parameter(Mandatory = $True)]
