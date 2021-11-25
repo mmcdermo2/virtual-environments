@@ -159,12 +159,6 @@ Function GenerateResourcesAndImage {
         [bool] $AllowBlobPublicAccess = $False
     )
 
-    if(-not ($PSBoundParameters.ContainsKey("StorageAccountName") -and $PSBoundParameters.ContainsKey("AzureLocation")))
-    {
-        # Prompt for value for AzureLocation
-        $AzureLocation = Read-Host -Prompt "Enter value for AzureLocation, eg East US"
-    }
-
     $builderScriptPath = Get-PackerTemplatePath -RepositoryRoot $ImageGenerationRepositoryRoot -ImageType $ImageType
     $ServicePrincipalClientSecret = $env:UserName + [System.GUID]::NewGuid().ToString().ToUpper();
     $InstallPassword = $env:UserName + [System.GUID]::NewGuid().ToString().ToUpper();
