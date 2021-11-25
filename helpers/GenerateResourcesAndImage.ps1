@@ -79,7 +79,7 @@ Function GenerateResourcesAndImage {
             The type of the image being generated. Valid options are: {"Windows2016", "Windows2019", "Windows2022", "Ubuntu1804", "Ubuntu2004"}.
 
         .PARAMETER AzureLocation
-            The location of the resources being created in Azure. For example "East US".
+            The location of the resources being created in Azure. For example "East US".  Ignored if StorageAccountName is used.  Required if not using StorageAccountName parameter.
 
         .PARAMETER Force
             Delete the resource group if it exists without user confirmation.
@@ -112,7 +112,7 @@ Function GenerateResourcesAndImage {
         [string] $StorageAccountName,
         [Parameter(Mandatory = $True)]
         [ImageType] $ImageType,
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $False)]
         [string] $AzureLocation,
         [Parameter(Mandatory = $False)]
         [string] $ImageGenerationRepositoryRoot = $pwd,
@@ -131,6 +131,12 @@ Function GenerateResourcesAndImage {
         [Parameter(Mandatory = $False)]
         [bool] $AllowBlobPublicAccess = $False
     )
+
+    if(-not ($PSBoundParameters.ContainsKey("StorageAccountName") -and $PSBoundParameters.ContainsKey("AzureLocation")))
+    {
+        # Prompt for value for AzureLocation
+        $AzureLocation = Read-Host -Prompt "Enter value for AzureLocation, eg East US"
+    }
 
     $builderScriptPath = Get-PackerTemplatePath -RepositoryRoot $ImageGenerationRepositoryRoot -ImageType $ImageType
     $ServicePrincipalClientSecret = $env:UserName + [System.GUID]::NewGuid().ToString().ToUpper();
