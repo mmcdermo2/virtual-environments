@@ -68,6 +68,10 @@ Function GenerateResourcesAndImage {
         .PARAMETER ResourceGroupName
             The Azure resource group name where the Azure resources will be created.
 
+        .PARAMETER StorageAccountName
+            Existing Storage Account to use for storing final artifacts.  Must reside within the Resource Group, omit to have a Storage Account created for you.
+            If the Storage Account doesn't exist, the script will fail.
+
         .PARAMETER ImageGenerationRepositoryRoot
             The root path of the image generation repository source.
 
@@ -104,6 +108,8 @@ Function GenerateResourcesAndImage {
         [string] $SubscriptionId,
         [Parameter(Mandatory = $True)]
         [string] $ResourceGroupName,
+        [Parameter(Mandatory = $False)]
+        [string] $StorageAccountName,
         [Parameter(Mandatory = $True)]
         [ImageType] $ImageType,
         [Parameter(Mandatory = $True)]
