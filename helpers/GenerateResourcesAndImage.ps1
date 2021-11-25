@@ -146,6 +146,13 @@ Function GenerateResourcesAndImage {
     }
     Set-AzContext -SubscriptionId $SubscriptionId
 
+    if($PSBoundParameters.ContainsKey("StorageAccountName")) {
+
+        # Check if the Storage Account exists, if it doesn't we should fail
+        Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName
+        Write-Verbose "Existing Storage Account specified, artifacts will be written to it"
+
+    } else {
     $alreadyExists = $true;
     try {
         Get-AzResourceGroup -Name $ResourceGroupName
@@ -198,6 +205,8 @@ Function GenerateResourcesAndImage {
     $storageAccountName += "001"
 
     New-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $storageAccountName -Location $AzureLocation -SkuName "Standard_LRS" -AllowBlobPublicAccess $AllowBlobPublicAccess
+
+    }
 
     if ([string]::IsNullOrEmpty($AzureClientId)) {
         # Interactive authentication: A service principal is created during runtime.
