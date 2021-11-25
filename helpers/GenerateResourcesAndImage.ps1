@@ -179,7 +179,7 @@ Function GenerateResourcesAndImage {
     }
     Set-AzContext -SubscriptionId $SubscriptionId
 
-    if($PSBoundParameters.ContainsKey("StorageAccountName")) {
+    if($PSCmdlet.ParameterSetName -eq "ExistingStorageAccount") {
 
         # Check if the Storage Account exists, if it doesn't we should fail
         Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName
