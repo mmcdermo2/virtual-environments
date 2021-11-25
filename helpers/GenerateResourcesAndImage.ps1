@@ -197,15 +197,15 @@ Function GenerateResourcesAndImage {
         }
 
         # This script should follow the recommended naming conventions for azure resources
-        $storageAccountName = if($ResourceGroupName.EndsWith("-rg")) {
+        $StorageAccountName = if($ResourceGroupName.EndsWith("-rg")) {
             $ResourceGroupName.Substring(0, $ResourceGroupName.Length -3)
         } else { $ResourceGroupName }
 
         # Resource group names may contain special characters, that are not allowed in the storage account name
-        $storageAccountName = $storageAccountName.Replace("-", "").Replace("_", "").Replace("(", "").Replace(")", "").ToLower()
-        $storageAccountName += "001"
+        $StorageAccountName = $StorageAccountName.Replace("-", "").Replace("_", "").Replace("(", "").Replace(")", "").ToLower()
+        $StorageAccountName += "001"
 
-        New-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $storageAccountName -Location $AzureLocation -SkuName "Standard_LRS" -AllowBlobPublicAccess $AllowBlobPublicAccess
+        New-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $StorageAccountName -Location $AzureLocation -SkuName "Standard_LRS" -AllowBlobPublicAccess $AllowBlobPublicAccess
 
     }
 
@@ -224,7 +224,7 @@ Function GenerateResourcesAndImage {
         Start-Sleep -Seconds $SecondsToWaitForServicePrincipalSetup
         $sub = Get-AzSubscription -SubscriptionId $SubscriptionId
         $tenantId = $sub.TenantId
-        # "", "Note this variable-setting script for running Packer with these Azure resources in the future:", "==============================================================================================", "`$spClientId = `"$spClientId`"", "`$ServicePrincipalClientSecret = `"$ServicePrincipalClientSecret`"", "`$SubscriptionId = `"$SubscriptionId`"", "`$tenantId = `"$tenantId`"", "`$spObjectId = `"$spObjectId`"", "`$AzureLocation = `"$AzureLocation`"", "`$ResourceGroupName = `"$ResourceGroupName`"", "`$storageAccountName = `"$storageAccountName`"", "`$install_password = `"$install_password`"", ""
+        # "", "Note this variable-setting script for running Packer with these Azure resources in the future:", "==============================================================================================", "`$spClientId = `"$spClientId`"", "`$ServicePrincipalClientSecret = `"$ServicePrincipalClientSecret`"", "`$SubscriptionId = `"$SubscriptionId`"", "`$tenantId = `"$tenantId`"", "`$spObjectId = `"$spObjectId`"", "`$AzureLocation = `"$AzureLocation`"", "`$ResourceGroupName = `"$ResourceGroupName`"", "`$StorageAccountName = `"$StorageAccountName`"", "`$install_password = `"$install_password`"", ""
     } else {
         # Parametrized Authentication via given service principal: The service principal with the data provided via the command line
         # is used for all authentication purposes.
@@ -254,7 +254,7 @@ Function GenerateResourcesAndImage {
         -var "tenant_id=$($tenantId)" `
         -var "location=$($AzureLocation)" `
         -var "resource_group=$($ResourceGroupName)" `
-        -var "storage_account=$($storageAccountName)" `
+        -var "storage_account=$($StorageAccountName)" `
         -var "install_password=$($InstallPassword)" `
         -var "allowed_inbound_ip_addresses=$($AgentIp)" `
         $builderScriptPath
