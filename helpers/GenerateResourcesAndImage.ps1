@@ -109,31 +109,53 @@ Function GenerateResourcesAndImage {
             GenerateResourcesAndImage -SubscriptionId {YourSubscriptionId} -ResourceGroupName "MyStorage-RG" -StorageAccountName "MyStorageAccount" -ImageType Windows2019
     #>
     param (
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $True, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $True, ParameterSetName = "ExistingStorageAccount")]
         [string] $SubscriptionId,
-        [Parameter(Mandatory = $True)]
+
+        [Parameter(Mandatory = $True, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $True, ParameterSetName = "ExistingStorageAccount")]
         [string] $ResourceGroupName,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $True, ParameterSetName = "ExistingStorageAccount")]
         [string] $StorageAccountName,
-        [Parameter(Mandatory = $True)]
+
+        [Parameter(Mandatory = $True, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $True, ParameterSetName = "ExistingStorageAccount")]
         [ImageType] $ImageType,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $True, ParameterSetName = "CreateStorageAccount")]
         [string] $AzureLocation,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [string] $ImageGenerationRepositoryRoot = $pwd,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [int] $SecondsToWaitForServicePrincipalSetup = 30,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [string] $AzureClientId,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [string] $AzureClientSecret,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [string] $AzureTenantId,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [Switch] $RestrictToAgentIpAddress,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
         [Switch] $Force,
-        [Parameter(Mandatory = $False)]
+
+        [Parameter(Mandatory = $False, ParameterSetName = "CreateStorageAccount")]
+        [Parameter(Mandatory = $False, ParameterSetName = "ExistingStorageAccount")]
         [bool] $AllowBlobPublicAccess = $False
     )
 
