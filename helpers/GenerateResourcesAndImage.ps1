@@ -153,58 +153,59 @@ Function GenerateResourcesAndImage {
         Write-Verbose "Existing Storage Account specified, artifacts will be written to it"
 
     } else {
-    $alreadyExists = $true;
-    try {
-        Get-AzResourceGroup -Name $ResourceGroupName
-        Write-Verbose "Resource group was found, will delete and recreate it."
-    }
-    catch {
-        Write-Verbose "Resource group was not found, will create it."
-        $alreadyExists = $false;
-    }
 
-    if ($alreadyExists) {
-        if($Force -eq $true) {
-            # Cleanup the resource group if it already exitsted before
-            Remove-AzResourceGroup -Name $ResourceGroupName -Force
-            New-AzResourceGroup -Name $ResourceGroupName -Location $AzureLocation
-        } else {
-            $title = "Delete Resource Group"
-            $message = "The resource group you specified already exists. Do you want to clean it up?"
-
-            $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", `
-                "Delete the resource group including all resources."
-
-            $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", `
-                "Keep the resource group and continue."
-
-            $stop = New-Object System.Management.Automation.Host.ChoiceDescription "&Stop", `
-                "Stop the current action."
-
-            $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no, $stop)
-            $result = $host.ui.PromptForChoice($title, $message, $options, 0)
-
-            switch ($result)
-            {
-                0 { Remove-AzResourceGroup -Name $ResourceGroupName -Force; New-AzResourceGroup -Name $ResourceGroupName -Location $AzureLocation }
-                1 { <# Do nothing #> }
-                2 { exit }
-            }
+        $alreadyExists = $true;
+        try {
+            Get-AzResourceGroup -Name $ResourceGroupName
+            Write-Verbose "Resource group was found, will delete and recreate it."
         }
-    } else {
-        New-AzResourceGroup -Name $ResourceGroupName -Location $AzureLocation
-    }
+        catch {
+            Write-Verbose "Resource group was not found, will create it."
+            $alreadyExists = $false;
+        }
 
-    # This script should follow the recommended naming conventions for azure resources
-    $storageAccountName = if($ResourceGroupName.EndsWith("-rg")) {
-        $ResourceGroupName.Substring(0, $ResourceGroupName.Length -3)
-    } else { $ResourceGroupName }
+        if ($alreadyExists) {
+            if($Force -eq $true) {
+                # Cleanup the resource group if it already exitsted before
+                Remove-AzResourceGroup -Name $ResourceGroupName -Force
+                New-AzResourceGroup -Name $ResourceGroupName -Location $AzureLocation
+            } else {
+                $title = "Delete Resource Group"
+                $message = "The resource group you specified already exists. Do you want to clean it up?"
 
-    # Resource group names may contain special characters, that are not allowed in the storage account name
-    $storageAccountName = $storageAccountName.Replace("-", "").Replace("_", "").Replace("(", "").Replace(")", "").ToLower()
-    $storageAccountName += "001"
+                $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", `
+                    "Delete the resource group including all resources."
 
-    New-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $storageAccountName -Location $AzureLocation -SkuName "Standard_LRS" -AllowBlobPublicAccess $AllowBlobPublicAccess
+                $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", `
+                    "Keep the resource group and continue."
+
+                $stop = New-Object System.Management.Automation.Host.ChoiceDescription "&Stop", `
+                    "Stop the current action."
+
+                $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no, $stop)
+                $result = $host.ui.PromptForChoice($title, $message, $options, 0)
+
+                switch ($result)
+                {
+                    0 { Remove-AzResourceGroup -Name $ResourceGroupName -Force; New-AzResourceGroup -Name $ResourceGroupName -Location $AzureLocation }
+                    1 { <# Do nothing #> }
+                    2 { exit }
+                }
+            }
+        } else {
+            New-AzResourceGroup -Name $ResourceGroupName -Location $AzureLocation
+        }
+
+        # This script should follow the recommended naming conventions for azure resources
+        $storageAccountName = if($ResourceGroupName.EndsWith("-rg")) {
+            $ResourceGroupName.Substring(0, $ResourceGroupName.Length -3)
+        } else { $ResourceGroupName }
+
+        # Resource group names may contain special characters, that are not allowed in the storage account name
+        $storageAccountName = $storageAccountName.Replace("-", "").Replace("_", "").Replace("(", "").Replace(")", "").ToLower()
+        $storageAccountName += "001"
+
+        New-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $storageAccountName -Location $AzureLocation -SkuName "Standard_LRS" -AllowBlobPublicAccess $AllowBlobPublicAccess
 
     }
 
