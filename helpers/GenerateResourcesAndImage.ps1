@@ -66,7 +66,8 @@ Function GenerateResourcesAndImage {
             The Azure subscription Id where resources will be created.
 
         .PARAMETER ResourceGroupName
-            The Azure resource group name where the Azure resources will be created.
+            The Azure resource group name where the Azure resources will be created.  Or the resource group where the Storage Account resides, if using StorageAccountName parameter.
+            If not saving to an existing Storage Account, this resource group will be created (or deleted and re-created if it already exists)
 
         .PARAMETER StorageAccountName
             Existing Storage Account to use for storing final artifacts.  Must reside within the Resource Group, omit to have a Storage Account created for you.
@@ -82,7 +83,8 @@ Function GenerateResourcesAndImage {
             The location of the resources being created in Azure. For example "East US".  Ignored if StorageAccountName is used.  Required if not using StorageAccountName parameter.
 
         .PARAMETER Force
-            Delete the resource group if it exists without user confirmation.
+            Delete the resource group (without user confirmation) if it exists and not using StorageAccountName parameter.
+            Ignored if using StorageAccountName parameter.
 
         .PARAMETER AzureClientId
             Client id needs to be provided for optional authentication via service principal. Example: "11111111-1111-1111-1111-111111111111"
